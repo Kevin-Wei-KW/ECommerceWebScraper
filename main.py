@@ -5,6 +5,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
+import os #allows for directory manipulation
+import webbrowser #allows for displaying websites in browsers
+
 #selenium automates browsers
 #chromedriver targets chrome
 
@@ -31,7 +34,17 @@ soup = BeautifulSoup(driver.page_source, 'lxml')   #parses site
 
 if __name__ == '__main__':
     # print(soup.prettify())
-    with open(r"C:\Users\Kevin\Desktop\Dev\scrapedCostco.txt", 'w') as f:
-        f.write(soup.prettify())
+
+    item_list = soup.find_all("span", {'class' : 'description'})
+
+    items_as_string = ""
+
+    for item in item_list:
+        items_as_string += str(item) + "\n"
+
+    print(items_as_string)
+    with open(r"C:\Users\Kevin\Desktop\Dev\Webscraper\test.html", 'w') as f:
+        f.write(items_as_string)
+
 
 
