@@ -1,3 +1,6 @@
+import codecs
+from urllib.request import urlopen
+
 import requests
 import bs4 as bs
 from bs4 import BeautifulSoup
@@ -18,7 +21,11 @@ driver = webdriver.Chrome(ChromeDriverManager().install())   #open chrome throug
 driver.get("https://www.costco.ca/laptops.html")    #opens link
 # https://www.bestbuy.ca/en-ca/category/laptops-macbooks/20352
 
-soup = BeautifulSoup(driver.page_source, 'lxml')   #parses site
+target_soup = BeautifulSoup(driver.page_source, 'lxml')  #parses site
+
+# html = urlopen('file:///' + os.path.abspath('test.html')); #reads html from
+html = codecs.open("index.html", "r", "utf-8") #same thing
+replacement_soup = BeautifulSoup(html, 'lxml')  #parses html file
 
 # html.parser- built-in - no extra dependencies needed
 # html5lib - the most lenient - better use it if HTML is broken
@@ -35,16 +42,36 @@ soup = BeautifulSoup(driver.page_source, 'lxml')   #parses site
 if __name__ == '__main__':
     # print(soup.prettify())
 
-    item_list = soup.find_all("span", {'class' : 'description'})
+    target_soup.prettify()
+
+    #extracts all items on site
+    item_list    = target_soup.find_all("span", {'class' : 'description'})
 
     items_as_string = ""
 
+    #turns list of items into a chunk of html text
     for item in item_list:
         items_as_string += str(item) + "\n"
 
-    print(items_as_string)
-    with open(r"C:\Users\Kevin\Desktop\Dev\Webscraper\test.html", 'w') as f:
-        f.write(items_as_string)
+    # print(items_as_string)
+
+    #reads html file
+    # with open(r"C:\Users\Kevin\Desktop\Dev\Webscraper\test.html", 'r') as f:
+
+        # f.write(items_as_string)
+
+        # replacement_soup = BeautifulSoup(f.read());
+
+    replacement_soup.find("body").insert_after(items_as_string)
+
+
+    with open(r"C:\Users\Kevin\Desktop\Dev\Webscraper\index.html", 'w') as f:
+        new_str = str(replacement_soup.prettify()) #converts soup into string
+        new_str = new_str.replace("&lt;", "<") #fixes "<" and ">" in html
+        new_str = new_str.replace("&gt;", ">")
+        f.write(new_str) #inputs into html file
+
+
 
 
 
