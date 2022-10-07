@@ -38,6 +38,7 @@ replacement_soup = BeautifulSoup(html, 'lxml')  #parses html file
 # URL = "https://www.bestbuy.ca/en-ca/category/laptops-macbooks/20352"
 # page = requests.get(URL)
 
+item_list = []
 
 if __name__ == '__main__':
     # print(soup.prettify())
@@ -45,12 +46,16 @@ if __name__ == '__main__':
     target_soup.prettify()
 
     #extracts all items on site
-    item_list    = target_soup.find_all("span", {'class' : 'description'})
+    html_item_list = target_soup.find_all("span", {'class' : 'description'})
+
+    for i in range(len(html_item_list)):
+        item_list[i].html = html_item_list[i]
+
 
     items_as_string = ""
 
     #turns list of items into a chunk of html text
-    for item in item_list:
+    for item in html_item_list:
         items_as_string += str(item) + "\n"
 
     # print(items_as_string)
@@ -61,6 +66,7 @@ if __name__ == '__main__':
         # f.write(items_as_string)
 
         # replacement_soup = BeautifulSoup(f.read());
+    print(items_as_string)
 
     replacement_soup.find("body").insert_after(items_as_string)
 
@@ -69,9 +75,21 @@ if __name__ == '__main__':
         new_str = str(replacement_soup.prettify()) #converts soup into string
         new_str = new_str.replace("&lt;", "<") #fixes "<" and ">" in html
         new_str = new_str.replace("&gt;", ">")
+        new_str = new_str.replace("</a>", "</a> <br>") #adds some line breaks
         f.write(new_str) #inputs into html file
 
 
+
+
+
+
+    class Item:
+        html = ""
+        price = 0
+        description = ""
+        spec_list = []
+        sale = 0
+        out_of_stock = False
 
 
 
