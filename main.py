@@ -93,7 +93,7 @@ if __name__ == '__main__':
     replacement_soup.find("head").insert_after("<body>" + items_as_string + "</body>")
 
 
- 
+  
     with open(r"C:\Users\Kevin\Desktop\Dev\Webscraper\index.html", 'w') as f:
         new_str = str(replacement_soup.prettify()) #converts soup into string
         new_str = new_str.replace("&lt;", "<") #fixes "<" and ">" in html
