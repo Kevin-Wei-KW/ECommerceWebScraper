@@ -1,6 +1,8 @@
 import codecs
 from urllib.request import urlopen
 
+import re
+
 import requests
 import bs4 as bs
 from bs4 import BeautifulSoup
@@ -38,7 +40,23 @@ replacement_soup = BeautifulSoup(html, 'lxml')  #parses html file
 # URL = "https://www.bestbuy.ca/en-ca/category/laptops-macbooks/20352"
 # page = requests.get(URL)
 
+class Item:
+    name = ""
+    html = ""
+    link = ""
+    price = 0
+    description = ""
+    spec_list = []
+    sale = 0
+    out_of_stock = False
+
+    def __init__(self, name, html):
+        Item.name = name
+        Item.html = html
+
+
 item_list = []
+
 
 if __name__ == '__main__':
     # print(soup.prettify())
@@ -48,11 +66,15 @@ if __name__ == '__main__':
     #extracts all items on site
     html_item_list = target_soup.find_all("span", {'class' : 'description'})
 
-    for i in range(len(html_item_list)):
-        item_list[i].html = html_item_list[i]
+    # for i in range(len(html_item_list)):
+    #     cur_html = html_item_list[i]
+    #     cur_link = re.findall('^href="([^"]*)"$', str(html_item_list[i]))[0]
+    #     # item_list[i].name = re.findall(item_list[i].link + '">([^<]*)<', html_item_list[i])
+    #     item_list.append(Item(cur_html, cur_link))
+    #     print(item_list[i].link)
 
 
-    items_as_string = ""
+    items_as_string = ""   #converts items into string awaiting insert to HTML
 
     #turns list of items into a chunk of html text
     for item in html_item_list:
@@ -66,9 +88,10 @@ if __name__ == '__main__':
         # f.write(items_as_string)
 
         # replacement_soup = BeautifulSoup(f.read());
-    print(items_as_string)
 
-    replacement_soup.find("body").insert_after(items_as_string)
+    # replacement_soup.body.append("<body>" + items_as_string + "</body>", 'html.parser')
+    replacement_soup.find("head").insert_after("<body>" + items_as_string + "</body>")
+
 
 
     with open(r"C:\Users\Kevin\Desktop\Dev\Webscraper\index.html", 'w') as f:
@@ -78,18 +101,17 @@ if __name__ == '__main__':
         new_str = new_str.replace("</a>", "</a> <br>") #adds some line breaks
         f.write(new_str) #inputs into html file
 
+        driver.quit() #closes chrome driver
 
 
 
 
 
-    class Item:
-        html = ""
-        price = 0
-        description = ""
-        spec_list = []
-        sale = 0
-        out_of_stock = False
+
+
+
+
+
 
 
 
