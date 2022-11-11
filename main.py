@@ -32,7 +32,7 @@ driver.get("https://www.costco.ca/laptops.html")    # opens link
 
 target_soup = BeautifulSoup(driver.page_source, 'lxml')  # parses site
 
-html = codecs.open("test.html", "r", "utf-8")  # reads local html
+html = codecs.open("templates/test.html", "r", "utf-8")  # reads local html
 replacement_soup = BeautifulSoup(html, 'lxml')  # html -> Soup parsing
 
 # Option 2
@@ -48,6 +48,7 @@ replacement_soup = BeautifulSoup(html, 'lxml')  # html -> Soup parsing
 
 class Item:
     name = ""
+    brand = ""
     html = ""
     link = ""
     price = 0
@@ -56,9 +57,11 @@ class Item:
     sale = 0
     out_of_stock = False
 
-    def __init__(self, name, html):
+    def __init__(self, name, brand, html, link):
         self.name = name
+        self.brand = brand
         self.html = html
+        self.link = link;
 
 
 item_list = []
@@ -73,19 +76,40 @@ if __name__ == '__main__':
 
     # stores data from html into Item object
     for i in range(len(html_item_list)):
-        cur_html = html_item_list[i]
-        item_as_string = str(html_item_list[i])
-        item_as_string_front_chopped = item_as_string[item_as_string.find("href"):]
-        cur_link = re.findall(r'href="([^"]*)"', item_as_string_front_chopped)[0]
+
+        # price = 0
+        # description = ""
+        # spec_list = []
+        # sale = 0'
+        # out_of_stock = False
+
+        item_as_string = str(html_item_list[i])  # turns soup to string
+
+        cur_name = re.findall(r'<a.*[\n][\s]*(.*)[\n]', item_as_string)[0]  # get name
+
+        cur_brand = re.findall(r'([^\s]*)\s', cur_name)[0]  # get brand
+
+        cur_html = html_item_list[i]  # get html
+
+        cur_link = re.findall(r'href="([^"]*)"', item_as_string)[0]  # get link
         # item_list[i].name = re.findall(item_list[i].link + '">([^<]*)<', html_item_list[i])
-        item_list.append(Item(cur_html, cur_link))
-        print(item_list[i].link)
+
+        driver.get(cur_link)
+
+        # create object
+        item_list.append(Item(cur_name, cur_brand, cur_html, cur_link))
 
     items_as_string = ""  # converts items into string awaiting insert to HTML
 
     # turns list of items into a chunk of html text
-    for item in html_item_list:
-        items_as_string += str(item) + "\n"
+    for i in range(len(item_list)):
+
+        items_as_string += "<h2>" + item_list[i].name + "</h2> \n"  # add name to html
+
+        items_as_string += str(item_list[i].html)  # add item html to html
+
+        items_as_string += "\n"  # skip line for formatting
+
 
     #reads html file
     # with open(r"C:\Users\Kevin\Desktop\Dev\Webscraper\test.html", 'r') as f:
@@ -99,7 +123,7 @@ if __name__ == '__main__':
     # replacement_soup.body.append("<body>" + items_as_string + "</body>", 'html.parser')
     replacement_soup.find("body").replace_with("<body> \n" + title + items_as_string + "</body>")
 
-    with open(r"C:\Users\Kevin\Desktop\Dev\Webscraper\test.html", 'w') as f:
+    with open(r"/templates/test.html", 'w') as f:
         new_str = str(replacement_soup.prettify())  # Soup -> String
 
         # fixes "<" and ">" in html
