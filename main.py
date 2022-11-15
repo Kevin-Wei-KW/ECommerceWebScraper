@@ -94,7 +94,12 @@ if __name__ == '__main__':
         cur_link = re.findall(r'href="([^"]*)"', item_as_string)[0]  # get link
         # item_list[i].name = re.findall(item_list[i].link + '">([^<]*)<', html_item_list[i])
 
-        driver.get(cur_link)
+        driver.get(cur_link) # opens up link to specific device
+
+        item_soup = BeautifulSoup(driver.page_source, 'lxml')
+
+        
+
 
         # create object
         item_list.append(Item(cur_name, cur_brand, cur_html, cur_link))
