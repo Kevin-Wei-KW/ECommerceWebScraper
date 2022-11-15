@@ -58,11 +58,13 @@ class Item:
     sale = 0
     out_of_stock = False
 
-    def __init__(self, name, brand, html, link):
+    def __init__(self, name, brand, html, link, img, description):
         self.name = name
         self.brand = brand
         self.html = html
-        self.link = link;
+        self.link = link
+        self.img = img
+        self.description = description
 
 
 item_list = []
@@ -99,15 +101,25 @@ if __name__ == '__main__':
 
         item_soup = BeautifulSoup(driver.page_source, 'lxml')
 
-        item_info_html = item_soup.find("div", {"id":"product-page"})  # gets product section on page
+        # gets product image on page
+        item_img_soup = item_soup.find("img", {"id": "RICHFXViewerContainer___richfx_id_0_initialImage"})
+        cur_img = re.findall(r'src="([^"]*)"', str(item_img_soup))
 
-        item_info_str = str(item_info_html)
+        # gets product price on page
+        item_price_soup = item_soup.find("span", {"automation-id": "productPriceOutput"})
+        cur_price = re.findall(r'>([^<]*)<', str(item_price_soup))
 
+        # gets product description on page
+        item_description_soup = item_soup.find("div", {"class": "product-info-description"})
+        cur_description = str(item_description_soup)
 
+        # gets product price on page
+        item_price_soup = item_soup.find("span", {"automation-id": "productPriceOutput"})
+        cur_price = re.findall(r'>([^<]*)<', str(item_price_soup))
 
 
         # create object
-        item_list.append(Item(cur_name, cur_brand, cur_html, cur_link))
+        item_list.append(Item(cur_name, cur_brand, cur_html, cur_link, cur_img))
 
     items_as_string = ""  # converts items into string awaiting insert to HTML
 
