@@ -51,6 +51,7 @@ class Item:
     brand = ""
     html = ""
     link = ""
+    img = ""
     price = 0
     description = ""
     spec_list = []
@@ -94,11 +95,15 @@ if __name__ == '__main__':
         cur_link = re.findall(r'href="([^"]*)"', item_as_string)[0]  # get link
         # item_list[i].name = re.findall(item_list[i].link + '">([^<]*)<', html_item_list[i])
 
-        driver.get(cur_link) # opens up link to specific device
+        driver.get(cur_link)  # opens up link to specific device
 
         item_soup = BeautifulSoup(driver.page_source, 'lxml')
 
-        
+        item_info_html = item_soup.find("div", {"id":"product-page"})  # gets product section on page
+
+        item_info_str = str(item_info_html)
+
+
 
 
         # create object
