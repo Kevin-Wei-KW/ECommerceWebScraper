@@ -55,16 +55,19 @@ class Item:
     price = 0
     description = ""
     spec_list = []
-    sale = 0
-    out_of_stock = False
+    sale = 0  # TBA
+    out_of_stock = False  # TBA
+    reviews = []  # TBA
 
-    def __init__(self, name, brand, html, link, img, description):
+    def __init__(self, name, brand, html, link, img, price, description, specs):
         self.name = name
         self.brand = brand
         self.html = html
         self.link = link
         self.img = img
+        self.price = price
         self.description = description
+        self.specs = specs
 
 
 item_list = []
@@ -75,14 +78,11 @@ if __name__ == '__main__':
 
     target_soup.prettify()  # Soup -> String
 
-    html_item_list = target_soup.find_all("span", {'class' : 'description'})  # extracts all items on site
+    html_item_list = target_soup.find_all("span", {'class': 'description'})  # extracts all items on site
 
     # stores data from html into Item object
     for i in range(len(html_item_list)):
 
-        # price = 0
-        # description = ""
-        # spec_list = []
         # sale = 0'
         # out_of_stock = False
 
@@ -103,23 +103,33 @@ if __name__ == '__main__':
 
         # gets product image on page
         item_img_soup = item_soup.find("img", {"id": "RICHFXViewerContainer___richfx_id_0_initialImage"})
-        cur_img = re.findall(r'src="([^"]*)"', str(item_img_soup))
+        cur_img = re.findall(r'src="([^"]*)"', str(item_img_soup))[0]
 
         # gets product price on page
         item_price_soup = item_soup.find("span", {"automation-id": "productPriceOutput"})
-        cur_price = re.findall(r'>([^<]*)<', str(item_price_soup))
+        cur_price = re.findall(r'>([^<]*)<', str(item_price_soup))[0]
 
         # gets product description on page
-        item_description_soup = item_soup.find("div", {"class": "product-info-description"})
+        item_description_soup = item_soup.find("div", {"class": "product-info-description", "automation-id": "productDescriptions"})
         cur_description = str(item_description_soup)
 
-        # gets product price on page
-        item_price_soup = item_soup.find("span", {"automation-id": "productPriceOutput"})
-        cur_price = re.findall(r'>([^<]*)<', str(item_price_soup))
-
+        # gets product specifications on page
+        # can be further broken down
+        item_specs_soup = item_soup.findAll("div", {"class": "product-info-description"})[1]
+        cur_specs = str(item_specs_soup)
 
         # create object
-        item_list.append(Item(cur_name, cur_brand, cur_html, cur_link, cur_img))
+        item_list.append(Item(cur_name, cur_brand, cur_html, cur_link, cur_img, cur_price, cur_description, cur_specs))
+
+        # test
+        # print("NAME: " + cur_name + "\n")
+        # print("BRAND: " + cur_brand + "\n")
+        # print("HTML: " + str(cur_html) + "\n")
+        # print("LINK: " + cur_link + "\n")
+        # print("IMG: " + cur_img + "\n")
+        # print("PRICE: " + cur_price + "\n")
+        # print("DESCRIPTION: " + cur_description + "\n")
+        # print("SPECS: " + cur_specs + "\n")
 
     items_as_string = ""  # converts items into string awaiting insert to HTML
 
@@ -132,20 +142,12 @@ if __name__ == '__main__':
 
         items_as_string += "\n"  # skip line for formatting
 
-
-    #reads html file
-    # with open(r"C:\Users\Kevin\Desktop\Dev\Webscraper\test.html", 'r') as f:
-
-        # f.write(items_as_string)
-
-        # replacement_soup = BeautifulSoup(f.read());
-
     title = "<h1>\n Welcome to Scrap Yard\n </h1> \n"
 
     # replacement_soup.body.append("<body>" + items_as_string + "</body>", 'html.parser')
     replacement_soup.find("body").replace_with("<body> \n" + title + items_as_string + "</body>")
 
-    with open(r"/templates/test.html", 'w') as f:
+    with open(r"./templates/test.html", 'w') as f:
         new_str = str(replacement_soup.prettify())  # Soup -> String
 
         # fixes "<" and ">" in html
