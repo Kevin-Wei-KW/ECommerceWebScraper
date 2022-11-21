@@ -70,8 +70,33 @@ class Item:
         self.specs = specs
 
 
-item_list = []
+def create_index_page(item_list):
+    page = ""
 
+    page += "<body> \n"
+
+    page += "<h1>\n Welcome to Scrap Yard\n </h1> \n"
+
+    # turns list of items into a chunk of html text
+    for i in range(len(item_list)):
+
+        page += "<h3>" + item_list[i].name + "</h3> \n"  # add name to html
+
+        page += str(item_list[i].html)  # add item html to html
+
+        page += "\n"  # skip line for formatting
+
+    page += "</body>"
+
+    return page
+
+
+# outputs string containing html code for an item
+def create_item_page(item):
+    page = ""
+
+
+    return page
 
 if __name__ == '__main__':
     # print(soup.prettify())
@@ -80,21 +105,23 @@ if __name__ == '__main__':
 
     html_item_list = target_soup.find_all("span", {'class': 'description'})  # extracts all items on site
 
+    item_list = []  # stores all Item objects
+
     # stores data from html into Item object
     for i in range(len(html_item_list)):
 
         # sale = 0'
         # out_of_stock = False
 
-        item_as_string = str(html_item_list[i])  # turns soup to string
+        cur_item = str(html_item_list[i])  # turns soup to string
 
-        cur_name = re.findall(r'<a.*[\n][\s]*(.*)[\n]', item_as_string)[0]  # get name
+        cur_name = re.findall(r'<a.*[\n][\s]*(.*)[\n]', cur_item)[0]  # get name
 
         cur_brand = re.findall(r'([^\s]*)\s', cur_name)[0]  # get brand
 
         cur_html = html_item_list[i]  # get html
 
-        cur_link = re.findall(r'href="([^"]*)"', item_as_string)[0]  # get link
+        cur_link = re.findall(r'href="([^"]*)"', cur_item)[0]  # get link
         # item_list[i].name = re.findall(item_list[i].link + '">([^<]*)<', html_item_list[i])
 
         driver.get(cur_link)  # opens up link to specific device
@@ -131,35 +158,23 @@ if __name__ == '__main__':
         # print("DESCRIPTION: " + cur_description + "\n")
         # print("SPECS: " + cur_specs + "\n")
 
-    items_as_string = ""  # converts items into string awaiting insert to HTML
-
-    # turns list of items into a chunk of html text
-    for i in range(len(item_list)):
-
-        items_as_string += "<h2>" + item_list[i].name + "</h2> \n"  # add name to html
-
-        items_as_string += str(item_list[i].html)  # add item html to html
-
-        items_as_string += "\n"  # skip line for formatting
-
-    title = "<h1>\n Welcome to Scrap Yard\n </h1> \n"
+    index_page = create_index_page(item_list)  # converts items into string awaiting insert to HTML
 
     # replacement_soup.body.append("<body>" + items_as_string + "</body>", 'html.parser')
-    replacement_soup.find("body").replace_with("<body> \n" + title + items_as_string + "</body>")
+    replacement_soup.find("body").replace_with(index_page)
 
     with open(r"./templates/test.html", 'w') as f:
-        new_str = str(replacement_soup.prettify())  # Soup -> String
+        index_soup = str(replacement_soup.prettify())  # Soup -> String
 
         # fixes "<" and ">" in html
-        new_str = new_str.replace("&lt;", "<")
-        new_str = new_str.replace("&gt;", ">")
+        index_soup = index_soup.replace("&lt;", "<")
+        index_soup = index_soup.replace("&gt;", ">")
 
-        new_str = new_str.replace("</a>", "</a> <br>")  # adds some line breaks
+        index_soup = index_soup.replace("</a>", "</a> <br>")  # adds some line breaks
 
-        f.write(new_str)  # inputs into html file
+        f.write(index_soup)  # inputs into html file
 
         driver.quit()  # closes chrome driver
-
 
 
 
