@@ -169,7 +169,6 @@ if __name__ == '__main__':
         # fixes "<" and ">" in html
         index_soup = index_soup.replace("&lt;", "<")
         index_soup = index_soup.replace("&gt;", ">")
-
         index_soup = index_soup.replace("</a>", "</a> <br>")  # adds some line breaks
 
         f.write(index_soup)  # inputs into html file
