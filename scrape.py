@@ -73,9 +73,7 @@ class Item:
 def create_index_page(item_list):
     page = ""
 
-    page += "<body> \n"
-
-    page += "<h1> Welcome to Scrap Yard </h1> \n"
+    page += "<div class=\"MainContent\">"
 
     # turns list of items into a chunk of html text
     for i in range(len(item_list)):
@@ -86,7 +84,7 @@ def create_index_page(item_list):
 
         page += "\n"  # skip line for formatting
 
-    page += "</body>"
+    page += "</div>"
 
     return page
 
@@ -156,7 +154,8 @@ def main():
     index_page = create_index_page(item_list)  # converts items into string awaiting insert to HTML
 
     # replacement_soup.body.append("<body>" + items_as_string + "</body>", 'html.parser')
-    replacement_soup.find("body").replace_with(index_page)
+    # replacement_soup.find("body").replace_with(index_page)
+    replacement_soup.body.form.insert_after(index_page)
 
     with open(r"./templates/test.html", 'w') as f:
         index_soup = str(replacement_soup.prettify())  # Soup -> String
