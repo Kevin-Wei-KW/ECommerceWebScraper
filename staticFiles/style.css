@@ -1,6 +1,6 @@
 html, body{
     margin: 0;
-    background-color: #b2cff2;
+    background-color: lightgray     ;
     color: black;
 }
 
@@ -19,7 +19,7 @@ h1 {
     border-bottom: 1px solid black;
     border-radius: 0 0 10px 10px;
     box-shadow: 0 5px 20px black;
-    background-color: #646464;
+    background-color: black;
 
     height: 70px;
 
