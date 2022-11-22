@@ -1,0 +1,45 @@
+html, body{
+    margin: 0;
+    background-color: #f5f1dc;
+}
+
+h1 {
+    text-align:center;
+}
+
+.navbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    list-style: none;
+
+    border-bottom: 1px solid black;
+    background-color: #d1b953;
+
+    height: 70px;
+
+    position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+}
+
+.navbar a:link {
+    text-decoration: none;
+    color: black;
+}
+
+.navbar a:visited {
+    color: black;
+}
+
+.navbar a:hover {
+    color: brown;
+}
+
+.navbar .brand {
+    margin-right: 80%;
+}
+
+.navbar li {
+    margin: 10px 20px 10px 20px;
+}
