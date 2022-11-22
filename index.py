@@ -8,6 +8,8 @@ app = Flask(__name__, template_folder='templates', static_folder='staticFiles')
 def index():
     return render_template('test.html')
 
+
+@app.route('/scrape/')
 def activate_scrape():
     scrape.main()
 
