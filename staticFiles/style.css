@@ -9,6 +9,10 @@ h1 {
     text-align:center;
 }
 
+ul {
+    list-style: none;
+}
+
 .navbar {
     display: flex;
     flex-direction: row;
@@ -55,7 +59,7 @@ h1 {
 }
 
 .navbar li {
-    margin: 10px 20px 10px 0px;
+    margin: 10px 25px 10px 25px;
 }
 
 .MainContent {

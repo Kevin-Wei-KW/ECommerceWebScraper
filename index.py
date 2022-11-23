@@ -9,7 +9,7 @@ def index():
     return render_template('test.html')
 
 
-@app.route('/scrape/')
+@app.route('/scrape/', methods=['POST'])
 def activate_scrape():
     scrape.main()
 

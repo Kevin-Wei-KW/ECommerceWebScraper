@@ -13,38 +13,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os  # allows for directory manipulation
 import webbrowser  # allows for displaying websites in browsers
 
-# NOTE
-# selenium automates browsers
-# chromedriver targets chrome
-
-driver = webdriver.Chrome(ChromeDriverManager().install())   # open chrome through driver
-driver.get("https://www.costco.ca/laptops.html")    # opens link
-# Bestbuy Link
-# https://www.bestbuy.ca/en-ca/category/laptops-macbooks/20352
-
-# Option 2
-# chrome_options = Options()
-# driver = webdriver.Chrome(executable_path=r"C:\Users\Kevin\Downloads\chromedriver_win32.zip\chromedriver.exe", options=chrome_options)
-
-# Option 3: Antiwebscraping Blocked
-# page = requests.get(URL)
-
-
-target_soup = BeautifulSoup(driver.page_source, 'lxml')  # parses site
-
-html = codecs.open("templates/test.html", "r", "utf-8")  # reads local html
-replacement_soup = BeautifulSoup(html, 'lxml')  # html -> Soup parsing
-
-# Option 2
-# html = urlopen('file:///' + os.path.abspath('test.html')); #reads html from
-
-# NOTE
-# html.parser- built-in - no extra dependencies needed
-# html5lib - the most lenient - better use it if HTML is broken
-# lxml - the fastest
-#
-# lenient parsing: can interpret inputs that do not match strict formats
-
 
 class Item:
     name = ""
@@ -70,8 +38,45 @@ class Item:
         self.specs = specs
 
 
+def connect_to_target():
+    # NOTE
+    # selenium automates browsers
+    # chromedriver targets chrome
+
+    global driver
+    driver = webdriver.Chrome(ChromeDriverManager().install())  # open chrome through driver
+    driver.get("https://www.costco.ca/laptops.html")  # opens link
+    # Bestbuy Link
+    # https://www.bestbuy.ca/en-ca/category/laptops-macbooks/20352
+
+    # Option 2
+    # chrome_options = Options()
+    # driver = webdriver.Chrome(executable_path=r"C:\Users\Kevin\Downloads\chromedriver_win32.zip\chromedriver.exe", options=chrome_options)
+
+    # Option 3: Antiwebscraping Blocked
+    # page = requests.get(URL)
+
+    global target_soup
+    target_soup = BeautifulSoup(driver.page_source, 'lxml')  # parses site
+
+    html = codecs.open("templates/test.html", "r", "utf-8")  # reads local html
+
+    global replacement_soup
+    replacement_soup = BeautifulSoup(html, 'lxml')  # html -> Soup parsing
+
+    # Option 2
+    # html = urlopen('file:///' + os.path.abspath('test.html')); #reads html from
+
+    # NOTE
+    # html.parser- built-in - no extra dependencies needed
+    # html5lib - the most lenient - better use it if HTML is broken
+    # lxml - the fastest
+    #
+    # lenient parsing: can interpret inputs that do not match strict formats
+
+
 def create_index_page(item_list):
-    page = ""
+    page = "\n"
 
     page += "<div class=\"MainContent\">"
 
@@ -140,6 +145,8 @@ def extract_data(html_item_list, item_list, i):
 
 def main():
     # print(soup.prettify())
+
+    connect_to_target()
 
     target_soup.prettify()  # Soup -> String
 
