@@ -3,6 +3,7 @@ html, body{
     background-color: lightgray     ;
     color: black;
     text-align: center;
+    min-width: 600px;
 }
 
 h1 {
@@ -85,4 +86,14 @@ ul {
     font-weight: bold;
     text-align: center;
     font-size: 18px;
+}
+
+
+/* ABOUT PAGE */
+
+.techs ul{
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 10px 10px 20px;
+    min-width: 600px;
 }
