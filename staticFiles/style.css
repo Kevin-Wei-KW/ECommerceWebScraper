@@ -96,4 +96,9 @@ ul {
     justify-content: space-between;
     margin: 20px 10px 10px 20px;
     min-width: 600px;
+    text-decoration: underline;
+}
+
+.techs img {
+    margin-top: 10px;
 }
