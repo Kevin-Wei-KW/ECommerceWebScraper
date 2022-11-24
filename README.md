@@ -9,7 +9,7 @@ Features: <br/>
 -Automate Chrome to bypass anti-web scraping <br/>
 -Scrape and parse HTML from target website <br/>
 -Extract useful information from parse tree <br/>
--Display obtained data as a separate HTML page <br/>
+-Display obtained data dynamically on page <br/>
 
 In Development: <br/>
 -Dynamically alter displayed HTML depending on user selections <br/>
