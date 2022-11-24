@@ -1,8 +1,8 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, redirect
 import scrape
 # follows directory structure to get html and css files
 app = Flask(__name__, template_folder='templates', static_folder='staticFiles')
-
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 @app.route('/')
 def index():
@@ -14,10 +14,14 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/scrape/', methods=['POST'])
+@app.route('/scrape/', methods=['GET', 'POST'])
 def activate_scrape():
     scrape.main()
-    return render_template('test.html')
+    return redirect("/")
+
+
+# def run_app():
+#     app.run()
 
 
 if __name__ == '__main__':

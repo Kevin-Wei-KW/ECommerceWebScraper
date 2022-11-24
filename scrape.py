@@ -154,9 +154,14 @@ def main():
 
     item_list = []  # stores all Item objects
 
+
+    count = 0
     # stores data from html into Item object
     for i in range(len(html_item_list)):
         extract_data(html_item_list, item_list, i)
+        count+=1
+        if(count == 2):
+            break
 
     index_page = create_index_page(item_list)  # converts items into string awaiting insert to HTML
 
@@ -170,7 +175,7 @@ def main():
         # fixes "<" and ">" in html
         index_soup = index_soup.replace("&lt;", "<")
         index_soup = index_soup.replace("&gt;", ">")
-        index_soup = index_soup.replace("</a>", "</a> <br>")  # adds some line breaks
+        # index_soup = index_soup.replace("</a>", "</a> <br>")  # adds some line breaks
 
         f.write(index_soup)  # inputs into html file
 
