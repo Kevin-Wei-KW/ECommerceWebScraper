@@ -20,6 +20,13 @@ def activate_scrape():
     return redirect("/")
 
 
+@app.route('/item/<name>', moethods=['POST'])
+def show_item(name):
+    item = scrape.item_list(scrape.item_index[name])  # gets item from list with stored index in dict
+    scrape.create_item_page(item)
+    return render_template('item.html')
+
+
 # def run_app():
 #     app.run()
 

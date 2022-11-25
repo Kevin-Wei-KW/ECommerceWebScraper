@@ -13,6 +13,13 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os  # allows for directory manipulation
 import webbrowser  # allows for displaying websites in browsers
 
+# GLOBAL Variables
+driver = None
+target_soup = None
+replacement_soup = None
+item_index = {}  # dictionary that tracks the index of an item based on name
+item_list = []  # stores all Item objects
+
 
 class Item:
     name = ""
@@ -96,9 +103,24 @@ def create_index_page(item_list):
 
 # outputs string containing html code for an item
 def create_item_page(item):
-    page = ""
+    page = "\n"
+
+    page += "<div class=\"MainContent\">"
+
+    # turns list of items into a chunk of html text
+    for i in range(len(item_list)):
+
+        page += "<h3>" + item_list[i].name + "</h3> \n"  # add name to html
+
+        page += str(item_list[i].html)  # add item html to html
+
+        page += "\n"  # skip line for formatting
+
+    page += "</div>"
 
     return page
+
+    return 1
 
 
 # create Item objects from pure extracted HTML
@@ -142,6 +164,12 @@ def extract_data(html_item_list, item_list, i):
     # create object
     item_list.append(Item(cur_name, cur_brand, cur_html, cur_link, cur_img, cur_price, cur_description, cur_specs))
 
+    global item_index
+    item_index[cur_name] = len(item_list)-1
+
+
+# item_list = []
+
 
 def main():
     # print(soup.prettify())
@@ -152,8 +180,8 @@ def main():
 
     html_item_list = target_soup.find_all("span", {'class': 'description'})  # extracts all items on site
 
-    item_list = []  # stores all Item objects
-
+    # global item_list
+    # item_list = []  # stores all Item objects
 
     count = 0
     # stores data from html into Item object
