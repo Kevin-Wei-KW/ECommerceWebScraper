@@ -16,7 +16,8 @@ import webbrowser  # allows for displaying websites in browsers
 # GLOBAL Variables
 driver = None
 target_soup = None
-replacement_soup = None
+replace_index_soup = None
+replace_item_soup = None
 item_index = {}  # dictionary that tracks the index of an item based on name
 item_list = []  # stores all Item objects
 
@@ -66,13 +67,16 @@ def connect_to_target():
     global target_soup
     target_soup = BeautifulSoup(driver.page_source, 'lxml')  # parses site
 
-    html = codecs.open("templates/test.html", "r", "utf-8")  # reads local html
+    index_html = codecs.open("templates/index.html", "r", "utf-8")  # reads local html
+    global replace_index_soup
+    replace_index_soup = BeautifulSoup(index_html, 'lxml')  # html -> Soup parsing
 
-    global replacement_soup
-    replacement_soup = BeautifulSoup(html, 'lxml')  # html -> Soup parsing
+    # item_html = codecs.open("templates/item.html", "r", "utf-8")
+    # global replace_item_soup
+    # replace_item_soup = BeautifulSoup(item_html, 'lxml')
 
     # Option 2
-    # html = urlopen('file:///' + os.path.abspath('test.html')); #reads html from
+    # html = urlopen('file:///' + os.path.abspath('index.html')); #reads html from
 
     # NOTE
     # html.parser- built-in - no extra dependencies needed
@@ -85,12 +89,14 @@ def connect_to_target():
 def create_index_page(item_list):
     page = "\n"
 
-    page += "<div class=\"MainContent\">"
+    page += "<div class=\"MainContent\"> \n"
 
     # turns list of items into a chunk of html text
     for i in range(len(item_list)):
 
+        page += "<a href=\"/item/" + item_list[i].name + "\"> \n"  # creates a get request to flask
         page += "<h3>" + item_list[i].name + "</h3> \n"  # add name to html
+        page += "</a> \n"
 
         page += str(item_list[i].html)  # add item html to html
 
@@ -99,29 +105,68 @@ def create_index_page(item_list):
     page += "</div>"
 
     return page
+
+
+def insert_index_page(index_page):
+    # replacement_soup.body.append("<body>" + items_as_string + "</body>", 'html.parser')
+    # replacement_soup.find("body").replace_with(index_page)
+    replace_index_soup.body.form.insert_after(index_page)
+
+    with open(r"templates/index.html", 'w') as f:
+        index_soup = str(replace_index_soup.prettify())  # Soup -> String
+
+        # fixes "<" and ">" in html
+        index_soup = index_soup.replace("&lt;", "<")
+        index_soup = index_soup.replace("&gt;", ">")
+        # index_soup = index_soup.replace("</a>", "</a> <br>")  # adds some line breaks
+
+        f.write(index_soup)  # inputs into html file
 
 
 # outputs string containing html code for an item
 def create_item_page(item):
     page = "\n"
 
-    page += "<div class=\"MainContent\">"
+    page += "<div class=\"ItemContent\"> \n"
 
-    # turns list of items into a chunk of html text
-    for i in range(len(item_list)):
+    page += "<img src=" + item.img + "/> \n"
 
-        page += "<h3>" + item_list[i].name + "</h3> \n"  # add name to html
+    page += "<div class=\"desc\"> \n"
 
-        page += str(item_list[i].html)  # add item html to html
+    page += "<h2>" + item.name + "</h2> \n"
 
-        page += "\n"  # skip line for formatting
+    page += "<p>Brand: " + item.brand + "</p> \n"
+    page += "<a href=" + item.link + ">Go To Website</a> \n"
+    page += "<h3>Price: <br/> " + item.price + "</h3> \n"
+    # page += "<br/> " + item.description + "\n"
+    # page += "<br/> " + item.specs + "\n"
+
+    page += "\n"  # skip line for formatting
 
     page += "</div>"
 
     return page
 
-    return 1
 
+def insert_item_page(item_page):
+
+    # item_soup = ""
+
+    with open(r"templates/item.html", 'r', encoding="utf-8") as f:
+        replace_item_soup = BeautifulSoup(f, 'lxml')
+
+        replace_item_soup.body.nav.insert_after(item_page)  # insert item page content after nav tag
+
+        item_soup = str(replace_item_soup.prettify())  # Soup -> String
+
+        # fixes "<" and ">" in html
+        item_soup = item_soup.replace("&lt;", "<")
+        item_soup = item_soup.replace("&gt;", ">")
+        # index_soup = index_soup.replace("</a>", "</a> <br>")  # adds some line breaks
+
+    with open(r"templates/item.html", 'w') as f:
+        print(item_soup)
+        f.write(item_soup)  # inputs into html file
 
 # create Item objects from pure extracted HTML
 def extract_data(html_item_list, item_list, i):
@@ -192,22 +237,9 @@ def main():
             break
 
     index_page = create_index_page(item_list)  # converts items into string awaiting insert to HTML
+    insert_index_page(index_page)  # inserts page into html form
 
-    # replacement_soup.body.append("<body>" + items_as_string + "</body>", 'html.parser')
-    # replacement_soup.find("body").replace_with(index_page)
-    replacement_soup.body.form.insert_after(index_page)
-
-    with open(r"./templates/test.html", 'w') as f:
-        index_soup = str(replacement_soup.prettify())  # Soup -> String
-
-        # fixes "<" and ">" in html
-        index_soup = index_soup.replace("&lt;", "<")
-        index_soup = index_soup.replace("&gt;", ">")
-        # index_soup = index_soup.replace("</a>", "</a> <br>")  # adds some line breaks
-
-        f.write(index_soup)  # inputs into html file
-
-        driver.quit()  # closes chrome driver
+    driver.quit()  # closes chrome driver
 
 
 if __name__ == '__main__':

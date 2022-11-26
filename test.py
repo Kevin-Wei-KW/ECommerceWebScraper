@@ -5,8 +5,8 @@ from urllib.request import urlopen
 import bs4 as bs
 from bs4 import BeautifulSoup
 
-# html = urlopen('file:///' + os.path.abspath('test.html')); #reads html from
-html = codecs.open("templates/test.html", "r", "utf-8")
+# html = urlopen('file:///' + os.path.abspath('index.html')); #reads html from
+html = codecs.open("templates/index.html", "r", "utf-8")
 
 replacement_soup = BeautifulSoup(html, 'html.parser')  #parses html file
 

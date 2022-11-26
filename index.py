@@ -6,7 +6,7 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 @app.route('/')
 def index():
-    return render_template('test.html')
+    return render_template('index.html')
 
 
 @app.route('/about/')
@@ -20,10 +20,11 @@ def activate_scrape():
     return redirect("/")
 
 
-@app.route('/item/<name>', moethods=['POST'])
+@app.route('/item/<name>', methods=['POST', 'GET'])
 def show_item(name):
-    item = scrape.item_list(scrape.item_index[name])  # gets item from list with stored index in dict
-    scrape.create_item_page(item)
+    item = scrape.item_list[scrape.item_index[name]]  # gets item from list with stored index in dict
+    item_page = scrape.create_item_page(item)
+    scrape.insert_item_page(item_page)
     return render_template('item.html')
 
 
