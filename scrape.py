@@ -129,7 +129,7 @@ def create_item_page(item):
 
     page += "<div class=\"ItemContent\"> \n"
 
-    page += "<img src=" + item.img + "/> \n"
+    page += "<img src=\"" + item.img + "\"/> \n"
 
     page += "<div class=\"desc\"> \n"
 
@@ -150,7 +150,17 @@ def create_item_page(item):
 
 def insert_item_page(item_page):
 
-    # item_soup = ""
+    item_soup = ""
+    # fresh_soup = ""
+    #
+    # # gets a fresh item page
+    # with open(r"templates/fresh_item_page.html", 'r', encoding="utf-8") as f:
+    #     new_item_soup = BeautifulSoup(f, 'lxml')
+    #     fresh_soup = str(new_item_soup.prettify())
+    #
+    # # resets item page to prepare for new item
+    # with open(r"templates/item.html", 'w') as f:
+    #     f.write(fresh_soup)
 
     with open(r"templates/item.html", 'r', encoding="utf-8") as f:
         replace_item_soup = BeautifulSoup(f, 'lxml')
@@ -165,7 +175,6 @@ def insert_item_page(item_page):
         # index_soup = index_soup.replace("</a>", "</a> <br>")  # adds some line breaks
 
     with open(r"templates/item.html", 'w') as f:
-        print(item_soup)
         f.write(item_soup)  # inputs into html file
 
 # create Item objects from pure extracted HTML

@@ -19,13 +19,16 @@ def activate_scrape():
     scrape.main()
     return redirect("/")
 
+@app.route('/items/')
+def show_item():
+    return render_template('item.html')
 
 @app.route('/item/<name>', methods=['POST', 'GET'])
-def show_item(name):
+def create_item(name):
     item = scrape.item_list[scrape.item_index[name]]  # gets item from list with stored index in dict
     item_page = scrape.create_item_page(item)
     scrape.insert_item_page(item_page)
-    return render_template('item.html')
+    return redirect("/items/")
 
 
 # def run_app():
