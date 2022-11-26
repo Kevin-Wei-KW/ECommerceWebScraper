@@ -86,6 +86,51 @@ def connect_to_target():
     # lenient parsing: can interpret inputs that do not match strict formats
 
 
+# create Item objects from pure extracted HTML
+def extract_data(html_item_list, item_list, i):
+    # sale = 0'
+    # out_of_stock = False
+
+    cur_item = str(html_item_list[i])  # turns soup to string
+
+    cur_name = re.findall(r'<a.*[\n][\s]*(.*)[\n]', cur_item)[0]  # get name
+
+    cur_brand = re.findall(r'([^\s]*)\s', cur_name)[0]  # get brand
+
+    cur_html = html_item_list[i]  # get html
+
+    cur_link = re.findall(r'href="([^"]*)"', cur_item)[0]  # get link
+    # item_list[i].name = re.findall(item_list[i].link + '">([^<]*)<', html_item_list[i])
+
+    driver.get(cur_link)  # opens up link to specific device
+
+    item_soup = BeautifulSoup(driver.page_source, 'lxml')
+
+    # gets product image on page
+    item_img_soup = item_soup.find("img", {"id": "RICHFXViewerContainer___richfx_id_0_initialImage"})
+    cur_img = re.findall(r'src="([^"]*)"', str(item_img_soup))[0]
+
+    # gets product price on page
+    item_price_soup = item_soup.find("span", {"automation-id": "productPriceOutput"})
+    cur_price = re.findall(r'>([^<]*)<', str(item_price_soup))[0]
+
+    # gets product description on page
+    item_description_soup = item_soup.find("div", {"class": "product-info-description",
+                                                   "automation-id": "productDescriptions"})
+    cur_description = str(item_description_soup)
+
+    # gets product specifications on page
+    # can be further broken down
+    item_specs_soup = item_soup.findAll("div", {"class": "product-info-description"})[1]
+    cur_specs = str(item_specs_soup)
+
+    # create object
+    item_list.append(Item(cur_name, cur_brand, cur_html, cur_link, cur_img, cur_price, cur_description, cur_specs))
+
+    global item_index
+    item_index[cur_name] = len(item_list)-1
+
+
 def create_index_page(item_list):
     page = "\n"
 
@@ -176,53 +221,6 @@ def insert_item_page(item_page):
 
     with open(r"templates/item.html", 'w') as f:
         f.write(item_soup)  # inputs into html file
-
-# create Item objects from pure extracted HTML
-def extract_data(html_item_list, item_list, i):
-    # sale = 0'
-    # out_of_stock = False
-
-    cur_item = str(html_item_list[i])  # turns soup to string
-
-    cur_name = re.findall(r'<a.*[\n][\s]*(.*)[\n]', cur_item)[0]  # get name
-
-    cur_brand = re.findall(r'([^\s]*)\s', cur_name)[0]  # get brand
-
-    cur_html = html_item_list[i]  # get html
-
-    cur_link = re.findall(r'href="([^"]*)"', cur_item)[0]  # get link
-    # item_list[i].name = re.findall(item_list[i].link + '">([^<]*)<', html_item_list[i])
-
-    driver.get(cur_link)  # opens up link to specific device
-
-    item_soup = BeautifulSoup(driver.page_source, 'lxml')
-
-    # gets product image on page
-    item_img_soup = item_soup.find("img", {"id": "RICHFXViewerContainer___richfx_id_0_initialImage"})
-    cur_img = re.findall(r'src="([^"]*)"', str(item_img_soup))[0]
-
-    # gets product price on page
-    item_price_soup = item_soup.find("span", {"automation-id": "productPriceOutput"})
-    cur_price = re.findall(r'>([^<]*)<', str(item_price_soup))[0]
-
-    # gets product description on page
-    item_description_soup = item_soup.find("div", {"class": "product-info-description",
-                                                   "automation-id": "productDescriptions"})
-    cur_description = str(item_description_soup)
-
-    # gets product specifications on page
-    # can be further broken down
-    item_specs_soup = item_soup.findAll("div", {"class": "product-info-description"})[1]
-    cur_specs = str(item_specs_soup)
-
-    # create object
-    item_list.append(Item(cur_name, cur_brand, cur_html, cur_link, cur_img, cur_price, cur_description, cur_specs))
-
-    global item_index
-    item_index[cur_name] = len(item_list)-1
-
-
-# item_list = []
 
 
 def main():
