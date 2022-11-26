@@ -151,16 +151,16 @@ def create_item_page(item):
 def insert_item_page(item_page):
 
     item_soup = ""
-    # fresh_soup = ""
-    #
-    # # gets a fresh item page
-    # with open(r"templates/fresh_item_page.html", 'r', encoding="utf-8") as f:
-    #     new_item_soup = BeautifulSoup(f, 'lxml')
-    #     fresh_soup = str(new_item_soup.prettify())
-    #
-    # # resets item page to prepare for new item
-    # with open(r"templates/item.html", 'w') as f:
-    #     f.write(fresh_soup)
+    fresh_soup = ""
+
+    # gets a fresh item page
+    with open(r"templates/fresh_item_page.html", 'r', encoding="utf-8") as f:
+        new_item_soup = BeautifulSoup(f, 'lxml')
+        fresh_soup = str(new_item_soup.prettify())
+
+    # resets item page to prepare for new item
+    with open(r"templates/item.html", 'w') as f:
+        f.write(fresh_soup)
 
     with open(r"templates/item.html", 'r', encoding="utf-8") as f:
         replace_item_soup = BeautifulSoup(f, 'lxml')
