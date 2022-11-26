@@ -153,11 +153,25 @@ def create_index_page(item_list):
 
 
 def insert_index_page(index_page):
-    # replacement_soup.body.append("<body>" + items_as_string + "</body>", 'html.parser')
-    # replacement_soup.find("body").replace_with(index_page)
-    replace_index_soup.body.form.insert_after(index_page)
 
+    index_soup = ""
+    fresh_soup = ""
+
+    # gets a fresh index page
+    with open(r"templates/fresh_index_page.html", 'r', encoding="utf-8") as f:
+        new_index_soup = BeautifulSoup(f, 'lxml')
+        fresh_soup = str(new_index_soup.prettify())
+
+    # resets index page to prepare for new item
     with open(r"templates/index.html", 'w') as f:
+        f.write(fresh_soup)
+
+
+    with open(r"templates/index.html", 'r', encoding="utf-8") as f:
+        replace_index_soup = BeautifulSoup(f, 'lxml')
+
+        replace_index_soup.body.form.insert_after(index_page)
+
         index_soup = str(replace_index_soup.prettify())  # Soup -> String
 
         # fixes "<" and ">" in html
@@ -165,6 +179,7 @@ def insert_index_page(index_page):
         index_soup = index_soup.replace("&gt;", ">")
         # index_soup = index_soup.replace("</a>", "</a> <br>")  # adds some line breaks
 
+    with open(r"templates/index.html", 'w') as f:
         f.write(index_soup)  # inputs into html file
 
 
@@ -188,7 +203,8 @@ def create_item_page(item):
 
     page += "\n"  # skip line for formatting
 
-    page += "</div>"
+    page += "</div>\n"
+    page += "</div>\n"
 
     return page
 
@@ -229,6 +245,11 @@ def main():
     connect_to_target()
 
     target_soup.prettify()  # Soup -> String
+
+    # resets the lists for each scrape
+    html_item_list = []
+    global item_list
+    item_list = []
 
     html_item_list = target_soup.find_all("span", {'class': 'description'})  # extracts all items on site
 
