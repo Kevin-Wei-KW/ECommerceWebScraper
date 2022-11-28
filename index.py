@@ -44,3 +44,6 @@ if __name__ == '__main__':
 # set FLASK_APP=index.py
 # $env:FLASK_APP = "index.py"
 # flask run
+#
+# pip install pipreqs
+# python -m  pipreqs.pipreqs --encoding utf-8  C:\Users\Kevin\Desktop\Dev\Webscraper
