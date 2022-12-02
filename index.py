@@ -4,6 +4,7 @@ import scrape
 app = Flask(__name__, template_folder='templates', static_folder='staticFiles')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -19,9 +20,17 @@ def activate_scrape():
     scrape.main()
     return redirect("/")
 
+
+@app.route('/clear/', methods=['GET', 'POST'])
+def clear_index():
+    scrape.clear_index_page()
+    return redirect("/")
+
+
 @app.route('/items/')
 def show_item():
     return render_template('item.html')
+
 
 @app.route('/item/<name>', methods=['POST', 'GET'])
 def create_item(name):
@@ -37,7 +46,6 @@ def create_item(name):
 
 if __name__ == '__main__':
     app.run()
-
 
 
 # CMD

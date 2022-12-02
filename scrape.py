@@ -21,7 +21,7 @@ replace_item_soup = None
 item_index = {}  # dictionary that tracks the index of an item based on name
 item_list = []  # stores all Item objects
 
-
+# keeps track of a single item on website9
 class Item:
     name = ""
     brand = ""
@@ -140,10 +140,10 @@ def create_index_page(item_list):
     for i in range(len(item_list)):
 
         page += "<a href=\"/item/" + item_list[i].name + "\"> \n"  # creates a get request to flask
-        page += "<h3>" + item_list[i].name + "</h3> \n"  # add name to html
+        page += "<h3>" + item_list[i].name + " &#128279;</h3> \n"  # add name to html
         page += "</a> \n"
 
-        page += str(item_list[i].html)  # add item html to html
+        # page += str(item_list[i].html)  # add item html to html
 
         page += "\n"  # skip line for formatting
 
@@ -152,9 +152,7 @@ def create_index_page(item_list):
     return page
 
 
-def insert_index_page(index_page):
-
-    index_soup = ""
+def clear_index_page():
     fresh_soup = ""
 
     # gets a fresh index page
@@ -167,10 +165,17 @@ def insert_index_page(index_page):
         f.write(fresh_soup)
 
 
+def insert_index_page(index_page):
+
+    index_soup = ""
+
+    clear_index_page()
+
+    # sets up replacement string
     with open(r"templates/index.html", 'r', encoding="utf-8") as f:
         replace_index_soup = BeautifulSoup(f, 'lxml')
 
-        replace_index_soup.body.form.insert_after(index_page)
+        replace_index_soup.find('div', 'Buttons').insert_after(index_page)
 
         index_soup = str(replace_index_soup.prettify())  # Soup -> String
 
@@ -178,6 +183,8 @@ def insert_index_page(index_page):
         index_soup = index_soup.replace("&lt;", "<")
         index_soup = index_soup.replace("&gt;", ">")
         # index_soup = index_soup.replace("</a>", "</a> <br>")  # adds some line breaks
+
+        index_soup = index_soup.replace("&amp;", "&")
 
     with open(r"templates/index.html", 'w') as f:
         f.write(index_soup)  # inputs into html file
@@ -223,6 +230,7 @@ def insert_item_page(item_page):
     with open(r"templates/item.html", 'w') as f:
         f.write(fresh_soup)
 
+    # sets up replacement string
     with open(r"templates/item.html", 'r', encoding="utf-8") as f:
         replace_item_soup = BeautifulSoup(f, 'lxml')
 
