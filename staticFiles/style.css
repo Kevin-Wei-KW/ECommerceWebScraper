@@ -111,7 +111,12 @@ ul {
     background-color: lightgray;
 }
 
-.MainContent a:link {
+.MainContent a:link{
+    text-decoration: none;
+    color: black;
+}
+
+.MainContent a:visited {
     text-decoration: none;
     color: black;
 
@@ -119,12 +124,17 @@ ul {
 
 /* ABOUT PAGE */
 
+.techs {
+    margin: 10px 20px;
+}
+
 .techs ul{
     display: flex;
     justify-content: space-between;
     margin: 20px 10px 10px 20px;
     min-width: 600px;
     text-decoration: underline;
+    padding: 0;
 }
 
 .techs img {

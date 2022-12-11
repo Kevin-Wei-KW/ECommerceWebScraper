@@ -24,6 +24,7 @@ def activate_scrape():
 @app.route('/clear/', methods=['GET', 'POST'])
 def clear_index():
     scrape.clear_index_page()
+    scrape.clear_data()
     return redirect("/")
 
 

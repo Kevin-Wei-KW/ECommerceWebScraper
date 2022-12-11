@@ -190,6 +190,14 @@ def insert_index_page(index_page):
         f.write(index_soup)  # inputs into html file
 
 
+# clears stored data
+def clear_data():
+    # resets the lists for each scrape
+    html_item_list = []
+    global item_list
+    item_list = []
+
+
 # outputs string containing html code for an item
 def create_item_page(item):
     page = "\n"
